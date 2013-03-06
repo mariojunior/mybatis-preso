@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserMapper">
+
+	<resultMap id="result" type="User">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+	</resultMap>
+	
+	<resultMap id="resultComplex" type="User" extends="result">
+		<collection property="systems" ofType="System">
+			<id property="id" column="sId"/>
+			<result property="name" column="sName"/>
+			<collection property="modules" ofType="Module">
+				<id property="id" column="mId"/>
+				<result property="name" column="mName"/>
+				<collection property="routines" ofType="Routine">
+					<id property="id" column="rId"/>
+					<result property="name" column="rName"/>
+				</collection>
+			</collection>
+		</collection>
+	</resultMap>
+
+	<sql id="sqlUser"> 
+		SELECT id, name, email FROM users
+	</sql> 
+	
+	<select id="listUser" resultMap="result">
+		<include refid="sqlUser" />
+	</select>
+
+	<select id="getUser" resultMap="result" parameterType="int">
+		<include refid="sqlUser" />		
+		WHERE id = #{id}
+	</select>
+
+	<update id="updateUser" parameterType="User">
+		UPDATE users SET
+		name = #{name},
+		email = #{email}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteUser" parameterType="User">
+		DELETE FROM users WHERE id = #{id}
+	</delete>
+	
+	<insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+		INSERT INTO users
+		(name, email)
+		VALUES
+		(#{name}, #{email})
+	</insert>
+
+
+<!-- 	FOR ORACLE/POSTGRES OR ANY DATABASE SERVER WHICH USES SEQUENCE GENERATION -->
+	<insert id="insertUserUsingSequences" parameterType="User">
+		<selectKey keyProperty="id" order="BEFORE" resultType="int">
+			SELECT users_SEQUENCE.nextval AS id FROM dual
+		</selectKey>
+		
+		INSERT INTO users
+		(id, name, email)
+		VALUES
+		(#{id}, #{name}, #{email})
+		
+	</insert>
+
+	
+<!-- 	SELECT WITH JOIN  -->
+	<select id="selectUserWithSystemsAndRoutines" parameterType="int" resultMap="resultComplex">
+		SELECT
+			u.id, u.name, u.email,
+			s.id as sId, s.name as sName, 
+			m.id as mId, m.name as mName,
+			r.id as rId, r.name as rName
+		FROM 
+			Users u 
+			LEFT JOIN Users_Systems us ON us.idUser = u.id
+			LEFT JOIN Systems s ON s.id = us.idSystem
+			LEFT JOIN Modules m ON m.idSystem = s.id
+			LEFT JOIN Routines r ON r.idModule = m.id
+		WHERE
+			u.id = #{id} 
+	</select>
+	
+	
+</mapper>

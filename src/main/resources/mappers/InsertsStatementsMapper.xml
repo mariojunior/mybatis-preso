@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InsertsStatementsMapper">
+
+<!-- USED ON INSERT BATCH SAMPLE -->
+	<insert id="insertSystem" useGeneratedKeys="true" keyProperty="id" parameterType="System">
+		INSERT INTO Systems (name) VALUES (#{name})
+	</insert>
+	
+	<insert id="insertModule" useGeneratedKeys="true" keyProperty="id" parameterType="Module">
+		INSERT INTO Modules (name, idSystem) VALUES (#{name}, #{system.id})
+	</insert>
+
+	<insert id="insertRoutine" useGeneratedKeys="true" keyProperty="id" parameterType="Routine">
+		INSERT INTO Routines (name, idModule) VALUES (#{name}, #{module.id})
+	</insert>
+
+	<insert id="insertUsersRoutines" parameterType="UserRoutine">
+		INSERT INTO Users_Routines (users_id, routines_id) VALUES (#{user.id}, #{routine.id})
+	</insert>
+
+	<insert id="insertUsersSystems" parameterType="UserSystem">
+		INSERT INTO Users_Systems (idUser, idSystem) VALUES (#{user.id}, #{system.id})
+	</insert>
+	
+	
+<!-- 	INSERT USERS already declared on UserMapper.xml -->
+<!-- 	<insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="User"> -->
+<!-- 		INSERT INTO Users (name, email) VALUES (#{name}, #{email}) -->
+<!-- 	</insert> -->
+
+<!-- USED ON DELETE BATCH SAMPLE -->
+	<delete id="deleteSystem" parameterType="System">
+		DELETE FROM Systems WHERE id = #{id}
+	</delete>
+	
+	
+	
+</mapper>

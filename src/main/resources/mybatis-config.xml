@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//www.mybatis.org//DTD Config 3.0//EN" 
+	"http://www.mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<typeAliases>
+		<typeAlias type="br.com.petrobras.semanariojava.pojos.User" alias="User" />
+		<typeAlias type="br.com.petrobras.semanariojava.pojos.System" alias="System" />
+		<typeAlias type="br.com.petrobras.semanariojava.pojos.Routine" alias="Routine" />
+		<typeAlias type="br.com.petrobras.semanariojava.pojos.Module" alias="Module" />
+		
+		<typeAlias type="br.com.petrobras.semanariojava.pojos.UserRoutine" alias="UserRoutine" />
+		<typeAlias type="br.com.petrobras.semanariojava.pojos.UserSystem" alias="UserSystem" />
+	</typeAliases>
+
+</configuration>
